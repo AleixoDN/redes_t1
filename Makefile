@@ -2,16 +2,55 @@
 ClienteSocket.o: ClienteSocket.c
 	gcc -o ClienteSocket.o -c ClienteSocket.c
 
-trab_1: ClienteSocket.o
-	gcc -o trab_1 ClienteSocket.o
+ServidorSocket.o: ServidorSocket.c
+	gcc -o ServidorSocket.o -c ServidorSocket.c
 
-all: trab_1
+cliente: ClienteSocket.o
+	gcc -o cliente ClienteSocket.o
+
+servidor: ServidorSocket.o
+	gcc -o servidor ServidorSocket.o
+
+all: cliente servidor
+
+
+
+
+
+
+socket_cliente.o: socket_cliente.c
+	gcc -pthread -o socket_cliente.o -c socket_cliente.c
+
+socket_cliente.o: socket_cliente.c
+	gcc -pthread -o socket_cliente.o -c socket_cliente.c
+
+cliente2: socket_cliente.o
+	gcc -pthread -o cliente2 socket_cliente.o
+
+servidor2: socket_servidor.o
+	gcc -pthread -o servidor2 socket_servidor.o
+
+all2: cliente2 servidor2
+
+run_c2: cliente2
+	./cliente2
+
+run_s2: servidor2
+	./servidor2
+
+
+
+
+
 
 clean: all
-	rm -rf trab_1 *.o
+	rm -rf cliente servidor *.o
 
-run: trab_1
-	./trab_1
+run_c: cliente
+	./cliente
+
+run_s: servidor
+	./servidor
 
 zip: clean
 	zip -r trab_1.zip ./*
