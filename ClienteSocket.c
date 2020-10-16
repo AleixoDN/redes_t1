@@ -1,6 +1,6 @@
 #include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
+#include <stdlib.h>
+#include <string.h>
 //#include <unistd.h>
 #include <sys/types.h> //Necessaria
 #include <sys/socket.h> //Necessaria
@@ -18,14 +18,14 @@ int main()
     int sock = socket(AF_INET, SOCK_STREAM,IPPROTO_TCP);// Criacao do socket cliente.
     if(sock < 0)
     {
-        DieWithSystemMessage("Erro na criacao do socket");
+        printf("\nErro na criacao do socket\n");
+        exit(1);
     }
     /*
-        AF_INET =
-        SOCK_STREAM =
-        IPPROTO_TCP =
-        A funcao socket() ...
-        DiewithMessage() é uma funcao para tratamento de erros.
+        AF_INET = Indica que o socket é para endereços do tipo IPV4.
+        SOCK_STREAM = Usado para indicar que o socket o protocolo utilizado é orientado a conexao.
+        IPPROTO_TCP = Usado para indicar que o socket é um protocolo TCP.
+        A funcao socket() retorna -1 se falhar
     */
 
     //Criando a struct que vai guardar informaçoes do servidor:
@@ -36,18 +36,24 @@ int main()
     servidoAddr.sin_port = htons(servidorPorta); //declarando a porta do servidor
 
     /*
-    Explicando funcoes:
+    sockaddr_in: é uma struct utilizada para guardar informaçoes sobre os sockets.
+    memset() garante que informacoes da struct que nao serao utilizadas contenham o valor 0.
+    AF_INET indica que o socket contém um endereço IPV4
+    a funcao htons() garante que o numero da porta esta no formatado de maneira adequada.
 
     */
 
     //Estabelecendo conexao com o servidor:
     if(connect(sock, (Struct sockaddr *) &servidorAddr, sizeof(servidorAddr)) < 0)
     {
-        DieWithSystemMessage("Erro de conexao");
+      printf("\nErro ao conectar o socket com o servidor\n");
+      exit(1);
     }
 
     /*
-        PQ temos que fazer o cast:
+        PQ temos que fazer o cast: O cast tem que ser feito pq a API do socket espera que enviemos um socket genérico
+        para ela, porém, estamos trabalhando com um socket IPV4. Portanto, o cast é necessario  para tratarmos nosso
+        socket no formato generico.
     */
 
     //Com a conexao estabelecida, temos que realizar nossa aplicacao.
@@ -62,7 +68,22 @@ int main()
         OBS2: Temos que por '\0' no final da string que ira receber a mensagem(StringBuffer).
             Basta fazermos StringBuffer[BUFSIZE] = '\0';
     */
-
+    char* str = "abcd";
+    int tamStr = strlen(str);
+    int bytesEnviados = send(sock, str, tamStr, 0); // Envia string.
+    if(bytesEnviados != tamStr)
+    {
+      pritnf("\nErro ao enviar string\n");
+      return 0;
+    }
+    char strRecebida[5];
+    int bytesRecebidos = 0;
+    while(bytesRecebidos < tamStr)
+    {
+       bytesRecebidos += rcv(sock, strRecebida, 4, 0);
+       strRecebid[4] = '\0';
+      fputs(strRecebida, stdout);
+    }
     //Por fim, fechamos o socket:
     close(sock);
     return 0;
