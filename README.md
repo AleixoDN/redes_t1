@@ -1,6 +1,6 @@
 # redes_t1
 
-Autores:
+*Autores*:
 
   Aleixo Damas Neto (Nº USP: 10310975)
   
@@ -13,10 +13,10 @@ Autores:
 
 
 
-OS utilizado: 
+*OS utilizado*: 
 
 
-Instruções para uso:
+*Instruções básicas*:
   Código compilavel e executável por meio de Makefile, por meio das diretivas:
     make all - Compilação
          run - Compilação e Execução
