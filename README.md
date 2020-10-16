@@ -1,10 +1,16 @@
 # redes_t1
 
 Autores:
+
   Aleixo Damas Neto (Nº USP: 10310975)
+  
   Fabio Henrique Alves Cavaleti (Nº USP: 11200550)
+  
   Luis Eduardo Prado Santini (Nº USP: 9065750)
+  
   Raul Cotrim Ferreira (Nº USP: 10748330)
+
+
 
 
 OS utilizado: 
