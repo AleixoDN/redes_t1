@@ -16,3 +16,6 @@
   - make run: Compilação e Execução
   - make clean: Remoção do executável e dos arquivos .o
   - make zip: Remoção do executável e dos arquivos .o, e compactação em um arquivo trab_1.zip
+
+
+Atualizar antes de enviar
