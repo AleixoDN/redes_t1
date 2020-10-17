@@ -21,8 +21,8 @@ all: cliente servidor
 socket_cliente.o: socket_cliente.c
 	gcc -pthread -o socket_cliente.o -c socket_cliente.c
 
-socket_cliente.o: socket_cliente.c
-	gcc -pthread -o socket_cliente.o -c socket_cliente.c
+socket_servidor.o: socket_servidor.c
+	gcc -pthread -o socket_servidor.o -c socket_servidor.c
 
 cliente2: socket_cliente.o
 	gcc -pthread -o cliente2 socket_cliente.o
