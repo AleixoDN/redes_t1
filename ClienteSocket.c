@@ -32,8 +32,8 @@ int main()
     struct sockaddr_in servidorAddr; //Endereço do servidor
     memset(&servidorAddr, 0, sizeof(servidorAddr)); //Zerando a string.
     servidorAddr.sin_family = AF_INET; //Declarando que é da familia IPV4
-    servidorAddr.sin_addr.s_addr = inet_addr(servidorIP)// Definindo o endereço do servidor
-    servidoAddr.sin_port = htons(servidorPorta); //declarando a porta do servidor
+    servidorAddr.sin_addr.s_addr = inet_addr(servidorIP);// Definindo o endereço do servidor
+    servidorAddr.sin_port = htons(servidorPorta); //declarando a porta do servidor
 
     /*
     sockaddr_in: é uma struct utilizada para guardar informaçoes sobre os sockets.
@@ -44,7 +44,7 @@ int main()
     */
 
     //Estabelecendo conexao com o servidor:
-    if(connect(sock, (Struct sockaddr *) &servidorAddr, sizeof(servidorAddr)) < 0)
+    if(connect(sock, (struct sockaddr *) &servidorAddr, sizeof(servidorAddr)) < 0)
     {
       printf("\nErro ao conectar o socket com o servidor\n");
       exit(1);
@@ -58,7 +58,7 @@ int main()
 
     //Com a conexao estabelecida, temos que realizar nossa aplicacao.
     //Gostaria que essa aplicacao fosse modularizada e chamassemos sua funcao.
-    /*Agora temos que usar as funcoes send() e rcv() para a troca de mensagens
+    /*Agora temos que usar as funcoes send() e recv() para a troca de mensagens
         Prototipo send():
             int bytesEnviados = send(sock, String, TamanhoString, 0);
             NAO ESQUEÇA DE TRATAR OS ERROS.
@@ -73,15 +73,15 @@ int main()
     int bytesEnviados = send(sock, str, tamStr, 0); // Envia string.
     if(bytesEnviados != tamStr)
     {
-      pritnf("\nErro ao enviar string\n");
+      printf("\nErro ao enviar string\n");
       return 0;
     }
     char strRecebida[5];
     int bytesRecebidos = 0;
     while(bytesRecebidos < tamStr)
     {
-       bytesRecebidos += rcv(sock, strRecebida, 4, 0);
-       strRecebid[4] = '\0';
+       bytesRecebidos += recv(sock, strRecebida, 4, 0);
+       strRecebida[4] = '\0';
       fputs(strRecebida, stdout);
     }
     //Por fim, fechamos o socket:

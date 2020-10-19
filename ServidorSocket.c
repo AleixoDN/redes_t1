@@ -1,5 +1,5 @@
 #include <stdio.h>
-#incldue <stdlib.h>
+#include <stdlib.h>
 //#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -37,7 +37,7 @@ int main()
     }
 
     //Esperando pedido de conexao
-    if(listen(servsock, 1) < 0)
+    if(listen(servSock, 1) < 0)
     {
         printf("Erro na funcao listen()");
         return;
@@ -61,7 +61,7 @@ int main()
 
 
         //Fechando sockets
-        close(servsock);
+        close(servSock);
         close(clientSock);
 
 
