@@ -18,3 +18,5 @@ event consulta (char *evento);
 void inicio();
 void fim();
 listt imprime();
+int remover(char *evento);
+int edicao(char *evento, char * novoEvento, char *data);

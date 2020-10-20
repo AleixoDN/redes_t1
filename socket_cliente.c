@@ -74,10 +74,10 @@ int main() {
 
 void *listener() {
     int recebidos;
-    char resposta[256];
+    char resposta[500];
 
     do {
-        recebidos = recv(sock_cliente,resposta,256,0);
+        recebidos = recv(sock_cliente,resposta,500,0);
         resposta[recebidos] = '\0';
         printf("\n\tServidor: %s\n\nCliente:\n", resposta);
     } while(recebidos != -1);

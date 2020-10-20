@@ -91,6 +91,91 @@ int cadastro(char *evento, char *data)// A funcao cadastro do cliente deve manda
     return 1;
 }
 
+int edicao(char *evento, char * novoEvento, char *data) {
+  int ver, ver2;
+  event tt;
+  Elem *no = *li;
+  int dia = -1, mes = -1, ano = -1;
+  char *token;
+  char corte[2] = "/";
+  int i = 0;
+
+  tt = consulta(evento);
+
+  if (tt.dia == -1) {
+    return -1;
+  }
+
+  tt = consulta(novoEvento);
+
+  if (tt.dia != -1) {
+    return -2;
+  }
+
+  token = strtok(data, corte);
+
+  while (token != NULL) {
+    switch (i) {
+      case 0:
+        dia = atoi(token);
+        i++;
+        break;
+      case 1:
+        mes = atoi(token);
+        i++;
+        break;
+      case 2:
+        ano = atoi(token);
+        i++;
+        break;
+      case 3:
+        dia = -1;
+        break;
+    }
+
+    token = strtok(NULL, corte);
+  }
+
+  if (dia == -1 || mes == -1 || ano == -1) {
+    return 0;
+  }
+
+  if (mes < 1 || mes > 12 || dia < 1 || dia > 31) {
+    return 0;
+  }
+  else {
+    if (mes == 2 || mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+      if (dia  > 30) {
+        return 0;
+      }
+      if (mes == 2) {
+        if (verBissesto(ano)) {
+          if (dia > 29) {
+            return 0;
+          }
+        }
+        else {
+          if (dia > 28) {
+            return 0;
+          }
+        }
+      }
+    }
+  }
+
+  while(no != NULL && strcmp(no->descricao, evento)!= 0){
+      no = no->prox;
+  }
+
+  strcpy(no->descricao, novoEvento);
+  no->dia = dia;
+  no->mes = mes;
+  no->ano = ano;
+
+  return 1;
+
+}
+
 listt imprime() {
     listt ev;
     Elem* no;
@@ -136,8 +221,13 @@ listt imprime() {
     return ev;
 }
 
-event consulta (char *evento)
-{
+int remover(char *evento) {
+  int ver = remove_lista(li, evento);
+
+  return ver;
+}
+
+event consulta (char *evento) {
     Elem* e = NULL;
     event novo;
     consulta_lista_nome(li, evento, &e);

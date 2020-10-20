@@ -8,7 +8,7 @@
 
 
 
-//Definição do tipo lista
+//Definiï¿½ï¿½o do tipo lista
 struct elemento{
     int dia;
     int mes;
@@ -24,7 +24,7 @@ typedef struct elemento* Lista;
 Lista* cria_lista();
 void libera_lista(Lista* li);
 int insere_lista_ordenada(Lista* li, int dia, int mes, int ano, char* str);
-int remove_lista(Lista* li, int dia, int mes, int ano, char* str);
+int remove_lista(Lista* li, char* str);
 int tamanho_lista(Lista* li);
 int lista_vazia(Lista* li);
 void imprime_lista(Lista* li);

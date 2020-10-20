@@ -35,7 +35,7 @@ int main() {
 
 
 	char *message = "Servidor Teste Trabalho Redes\n\tDigite -help para mais informacoes\n";
-	char *informacoes = "Comandos\n\t-insere {descricao} - {dia}/{mes}/{ano}\nAdiciona um evento\n\t-consulta {descricao}\nConsulta um evento\n\t-listar\nLista todos os eventos salvos";
+	char *informacoes = "Comandos\n\t-insere {descricao} - {dia}/{mes}/{ano}\nAdiciona um evento\n\t-consulta {descricao}\nConsulta um evento\n\t-listar\nLista todos os eventos salvos\n\t-remove {descricao}\nRemove um evento\n\t-editar {descricao} - {nova descricao} - {dia}/{mes}/{ano}\nEdita o evento para a nova data e descricao";
 
 
 	inicio();
@@ -193,6 +193,12 @@ int main() {
 							else if (!strcmp(token, "-listar")) {
 								i = 5;
 							}
+							else if (!strcmp(token, "-remove")) {
+								i = 6;
+							}
+							else if (!strcmp(token, "-editar")) {
+								i = 7;
+							}
 							else {
 								char *msg = "Opcao invalida!\n";
 
@@ -225,7 +231,7 @@ int main() {
 							}
 
 							send(sd, msg, strlen(msg), 0);
-						}
+						} // consultar
 
 						if (i == 2) {
 							strcpy(corte, "-");
@@ -275,7 +281,7 @@ int main() {
 
 								send(sd, msg, strlen(msg), 0);
 							}
-						}
+						} // inserir
 
 						if (i == 5) {
 							listt ev;
@@ -323,7 +329,99 @@ int main() {
 							}
 
 							send(sd, msg, strlen(msg), 0);
-						}
+						} // listar
+
+						if (i == 6) {
+							char *tt = strchr(backup, ' ');
+							tt++;
+
+							int ver = remover(tt);
+
+							printf("%d\n", ver);
+
+							char msg[500];
+
+							if (ver == 0) {
+								strcpy(msg, "Evento nao encontrado!");
+							}
+							else if (ver == -1) {
+								strcpy(msg, "Erro na remocao do evento");
+							}
+							else {
+								strcpy(msg, "O evento '");
+								strcat(msg, tt);
+								strcat(msg, "' foi removido com sucesso");
+							}
+
+							send(sd, msg, strlen(msg), 0);
+						} // remover
+
+						if (i == 7) {
+							strcpy(corte, "-");
+
+							short passou = 0;
+							char *novoEvento = (char *) malloc(100 * sizeof(char));
+
+							if (novoEvento == NULL) {
+								char *msg = "Erro na edicao do evento";
+								send(sd, msg, strlen(msg), 0);
+							}
+							else {
+
+								char *tt = strchr(backup, ' ');
+								tt++;
+
+								token = strtok(tt, corte);
+
+								while (token != NULL) {
+									if (i == 7) {
+										strcpy(evento, token);
+										evento[strlen(evento) - 1] = '\0';
+										i++;
+									}
+									else if (i == 8) {
+										strcpy(novoEvento, token);
+										novoEvento++;
+										novoEvento[strlen(novoEvento) - 1] = '\0';
+										i++;
+									}
+									else {
+										char *msg;
+
+										int c = edicao(evento, novoEvento, token);
+
+										switch (c) {
+											case 1:
+												msg = "Edicao Efeituada!";
+												break;
+											case 0:
+												msg = "Erro na nova data do evento";
+												break;
+											case -1:
+												msg = "Evento nao encontrado";
+												break;
+											case -2:
+												msg = "Nova descricao de evento ja registrada";
+												break;
+										}
+
+										send(sd, msg, strlen(msg), 0);
+
+										passou = 1;
+
+										break;
+									}
+
+									token = strtok(NULL, corte);
+								}
+
+								if (!passou) {
+									char *msg = "Escrita errada para cadastro";
+
+									send(sd, msg, strlen(msg), 0);
+								}
+							}
+						} // editar
 
 						printf("Mensagem Enviada\n");
 					}

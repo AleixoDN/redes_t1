@@ -104,20 +104,19 @@ int insere_lista_ordenada(Lista* li, int dia, int mes, int ano, char* str)
     }
 }
 
-int remove_lista(Lista* li, int dia, int mes, int ano, char* str)
+int remove_lista(Lista* li, char* str)
 {
     if(li == NULL)
         return ERRO;
     if((*li) == NULL)//lista vazia
         return ERRO;
     Elem *ant, *no = *li;
-    while(no != NULL && no->ano != ano && no->mes != mes && no->dia != dia && strcmp(no->descricao, str)!= 0){
+    while(no != NULL && strcmp(no->descricao, str)!= 0){
         ant = no;
         no = no->prox;
     }
     if(no == NULL) //n�o encontrado
     {
-        printf("Evento nao encontrado!");
         return ERRO;
     }
 
