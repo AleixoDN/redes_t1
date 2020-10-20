@@ -12,10 +12,8 @@
 
 **Instruções básicas**:
 - Código compilavel e executável por meio de Makefile, por meio das diretivas:
-  - make all: Compilação
-  - make run: Compilação e Execução
+  - make all: Compilação do código do servidor e do cliente
+  - make run_server: Compilação e Execução do servidor
+  - make run_client: Compilação e Execução do cliente
   - make clean: Remoção do executável e dos arquivos .o
   - make zip: Remoção do executável e dos arquivos .o, e compactação em um arquivo trab_1.zip
-
-
-Atualizar antes de enviar
