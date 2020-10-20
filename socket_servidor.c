@@ -35,7 +35,7 @@ int main() {
 
 
 	char *message = "Servidor Teste Trabalho Redes\n\tDigite -help para mais informacoes\n";
-	char *informacoes = "Comandos\n\t-insere {descricao} - {dia}/{mes}/{ano}\nAdiciona um evento\n\t-consulta {descricao}\nConsulta um evento";
+	char *informacoes = "Comandos\n\t-insere {descricao} - {dia}/{mes}/{ano}\nAdiciona um evento\n\t-consulta {descricao}\nConsulta um evento\n\t-listar\nLista todos os eventos salvos";
 
 
 	inicio();
@@ -113,7 +113,7 @@ int main() {
 
 		// Espera indefinidamente até ter uma atividade em algum sócket do conjunto
 		activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
-		if (activity == 1) {
+		if (activity == -1) {
 			printf("ERRO. Problema na seleção de clientes.");
 		}
 
@@ -190,6 +190,9 @@ int main() {
 							else if (!strcmp(token, "-insere")) {
 								i = 2;
 							}
+							else if (!strcmp(token, "-listar")) {
+								i = 5;
+							}
 							else {
 								char *msg = "Opcao invalida!\n";
 
@@ -227,6 +230,8 @@ int main() {
 						if (i == 2) {
 							strcpy(corte, "-");
 
+							short passou = 0;
+
 							char *tt = strchr(backup, ' ');
 							tt++;
 
@@ -241,20 +246,83 @@ int main() {
 								else {
 									char *msg;
 
-									if (cadastro(evento, token)) {
+									int c = cadastro(evento, token);
+
+									if (c == 1) {
 										msg = "Cadastro Efeituado!";
 									}
 									else {
-										msg = "Erro na realizacao do cadastro!";
+										if (c == -1) {
+											msg = "Nome do evento ja existente!";
+										}
+										else {
+											msg = "Erro na realizacao do cadastro!";
+										}
 									}
 
 									send(sd, msg, strlen(msg), 0);
+
+									passou = 1;
 
 									break;
 								}
 
 								token = strtok(NULL, corte);
 							}
+
+							if (!passou) {
+								char *msg = "Escrita errada para cadastro";
+
+								send(sd, msg, strlen(msg), 0);
+							}
+						}
+
+						if (i == 5) {
+							listt ev;
+							char msg[10000];
+
+							ev = imprime();
+
+							switch (ev.erro) {
+								case 0:
+									printf("Caso 0\n");
+
+									if (ev.events == 0) {
+										strcpy(msg, "Nenhum evento registrado");
+									}
+									else {
+										strcpy(msg, "Eventos:");
+
+										printf("%d\n", ev.events);
+
+										for (int i = 0; i < ev.events; i++) {
+											printf("%s\n", ev.desc[i]);
+											strcat(msg, "\n");
+											strcat(msg, ev.desc[i]);
+											free(ev.desc[i]);
+										}
+
+										free(ev.desc);
+									}
+
+									break;
+								case 1:
+									printf("Caso 1\n");
+									strcpy(msg, "Erro na Listagem dos eventos");
+									break;
+								case 2:
+									printf("Caso 2\n");
+									strcpy(msg, "Erro na Listagem dos eventos");
+
+									for (int i = 0; i < ev.events; i++) {
+										free(ev.desc[i]);
+									}
+
+									free(ev.desc);
+									break;
+							}
+
+							send(sd, msg, strlen(msg), 0);
 						}
 
 						printf("Mensagem Enviada\n");
